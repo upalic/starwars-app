@@ -1,1 +1,25 @@
-<p>starwars list works</p>
+<div class="wrapper">
+  <kendo-stacklayout [gap]="15" [orientation]="'vertical'">
+    <div class="wrapper__header">
+      <div kendoTypography textAlign="center" variant="h3">StarWars</div>
+    </div>
+    <div class="wrapper__content k-d-flex k-flex-wrap k-gap-4">
+      <!-- resuable button toggle -->
+      <app-button-toggle [selectionMode]="mode" [buttons]="buttonConfigs" (navigateEvent)="onNavigate($event)">
+      </app-button-toggle>
+      <div class="k-d-flex k-flex-wrap k-gap-4">
+          <div class="k-grow k-basis-1/2">
+            <!-- resuable table -->
+            <app-data-grid [tableData]="gridData" [columns]="currentColumns" [pageSize]="pageSize" [isLoading]="isLoading"></app-data-grid>
+          </div>
+          <div class="k-grow k-basis-1">
+            <!-- resuable card component -->
+            <ng-container  *ngIf="cardDetails.length">
+              <app-card [orientation]="'vertical'" [cardDetails]="cardDetails" [cardTitle]="categoryTitle"></app-card>
+            </ng-container>
+            <div kendoTypography textAlign="center" variant="h6" *ngIf="!cardDetails.length">No Data</div>
+          </div>
+      </div>
+    </div>       
+  </kendo-stacklayout>
+</div>

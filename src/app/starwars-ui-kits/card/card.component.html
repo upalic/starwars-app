@@ -1,1 +1,50 @@
-<p>card component works</p>
+<!-- <kendo-card [orientation]="orientation" *ngFor="let card of cardDetails" width="100%">
+    <ng-container *ngIf="card.thumbnail || card.title || card.subtitle">
+        <kendo-card-header [ngClass]="{'k-hstack': card.thumbnail}">
+            <kendo-avatar
+                width="40px"
+                height="40px"
+                [imageSrc]="card.thumbnail"
+                shape="circle"
+                *ngIf="card.thumbnail"
+            ></kendo-avatar>
+            <div>
+                <h1 kendoCardTitle *ngIf="card.title">{{card.title}}</h1>
+                <p kendoCardSubtitle *ngIf="card.subtitle">{{card.subtitle}}</p>
+            </div>
+        </kendo-card-header>
+    </ng-container>
+    <img [src]="card.coverImg" *ngIf="card.coverImg" kendoCardMedia alt="cover_img" />
+    <kendo-card-body>
+        <ng-container *ngIf="card.bodyTitle">
+            <div kendoTypography variant="p" themeColor="secondary">{{card.bodyTitle}}</div>
+            <hr kendoCardSeparator />
+        </ng-container>
+        <div kendoTypography variant="p" *ngIf="card.bodyText">{{card.bodyText}}</div>
+    </kendo-card-body>
+    <kendo-card-actions [orientation]="card.buttonOrientation" layout="stretched" *ngIf="card.buttonList">
+        <button kendoButton fillMode="flat" *ngFor="let button of card.buttonList">
+            {{button.name}}
+        </button>
+    </kendo-card-actions>
+    <kendo-card-footer [ngClass]="{'k-hstack': card.orientation === 'horizontal', 'k-vstack': card.orientation === 'vertical' }" *ngIf="card.footerText">
+        <span>{{card.footerText}}</span>
+    </kendo-card-footer>
+ </kendo-card> -->
+
+ <!-- I updated to this card but this card component is not as usable as other Ui kit components -->
+ <kendo-card [orientation]="orientation" width="100%">
+    <kendo-card-header class="k-hstack">
+        <h6 kendoCardTitle>{{cardTitle}}</h6>
+    </kendo-card-header>
+    <kendo-card-body>
+        <ng-container  *ngFor="let card of cardDetails">
+            <div class="k-flex-col k-my-2">
+                <div kendoTypography fontSize="lg" class="k-pb-1">{{card.bodyTitle}}</div>
+                <div kendoTypography fontSize="sm">{{card.bodyText}}</div>
+            </div>
+            <hr kendoCardSeparator />
+        </ng-container>
+    </kendo-card-body>
+ </kendo-card>
+ 

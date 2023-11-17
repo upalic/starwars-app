@@ -1,0 +1,10 @@
+.k-card {
+    &-title {
+        font-size: 20px;
+    }
+    &-body {
+        .k-card-separator:last-child {
+            display: none;
+        }
+    }
+}

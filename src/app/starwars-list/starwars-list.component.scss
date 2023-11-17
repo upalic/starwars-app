@@ -1,0 +1,10 @@
+@import "../../assets/stylesheet/variables";
+
+.wrapper {
+   &__header {
+    background-color: $kendo-color-light;
+   }
+   &__header, &__content {
+       padding: 16px;
+   }
+}
