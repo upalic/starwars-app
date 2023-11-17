@@ -4,7 +4,7 @@
 
 ## Screenshot
 
-![Planets Page](<Screen Shot 2023-11-16 at 6.35.03 PM.png>)
+![Planets Page](<src/assets/images/Screen Shot 2023-11-16 at 6.35.03 PM.png>)
 
 ## Project Approach
 * I started the project by building fundamental components or say low level components utilizing the Kendo UI library.
