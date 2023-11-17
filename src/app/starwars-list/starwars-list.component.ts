@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonGroupSelection } from '@progress/kendo-angular-buttons';
-import { HttpClient } from '@angular/common/http';
 import { StarwarsService } from '../service/starwars.service';
 
 interface Data {
@@ -22,8 +21,6 @@ interface Data {
 interface cardDetails {
   bodyTitle: string,
   bodyText: string,
-  buttonOrientation: string,
-  buttonList: Array<{ id: number; name: string }>;
 }
 
 declare type Category = 'planets' | 'characters' | 'starships';
@@ -38,7 +35,7 @@ type CategoryConfig = { [x: string]: { columns: ColumnConfig[], url: string, sor
 })
 export class StarwarsListComponent implements OnInit {
 
-  constructor(private httpClient: HttpClient, private starwarService: StarwarsService) {
+  constructor(private starwarService: StarwarsService) {
   }
  
   mode = 'single' as ButtonGroupSelection;
@@ -153,7 +150,7 @@ export class StarwarsListComponent implements OnInit {
       sortData = this.gridData.sort((a, b) => b.diameter - a.diameter).slice(0,5);
     } else if (category === 'characters') {
       // Using 1977 as the battle of Yavin
-      const battleOfYavin = 1977
+      const battleOfYavin = 1977;
       const currentYear = new Date().getFullYear();
       sortData = this.gridData.filter(data => {
         // let age = 0;
@@ -170,9 +167,9 @@ export class StarwarsListComponent implements OnInit {
         // Based on the data there arnt any ABY ages so keeping it as just BBY and not calculating based on current date
 
         let age = 0;
-        const yavinAge = data.birthYear.slice(0, -3)
+        const yavinAge = data.birthYear.slice(0, -3);
 
-        if (data.birthYear.includes('BBY') && +yavinAge < 40) {
+        if (data.birthYear.includes('BBY') && + yavinAge < 40) {
           return true
         }
 
@@ -185,15 +182,16 @@ export class StarwarsListComponent implements OnInit {
     }
 
     this.cardDetails = sortData.map((item: any) => ({
-      bodyTitle: `${item.name}${category === 'characters' ? ', age: ' + item.birthYear : ''}`,
-      bodyText: `${config.sortKey.toUpperCase()}: ${item[config.sortKey]}`, 
-      buttonOrientation: '',
-      buttonList: []
+      bodyTitle: item.name,
+      bodyText: `${category === 'characters' ? 'Age: ' + item.birthYear : ''} | Mass: ${item[config.sortKey]}`
     }));
+  }
+  
+  private clearGrid(): void {
+    this.gridData = [];
   }
  
   // started with this, Refactored to config
-
   // private getPlanetList(): void {
   //   this.clearGrid();
   //   this.isLoading = true; 
@@ -212,8 +210,5 @@ export class StarwarsListComponent implements OnInit {
   //   this.isLoading = true; 
   //   this.fetchAllData(this.buttonTabs[2].url);
   // }
- 
-  private clearGrid(): void {
-    this.gridData = [];
-  }
+
 }
