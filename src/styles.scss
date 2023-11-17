@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "assets/stylesheet/variables";
+
+// Import Kendo UI Material theme
+@import "@progress/kendo-theme-material/dist/all.scss";
+
+body {
+   margin: 0;
+}
