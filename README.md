@@ -23,12 +23,13 @@
 * Expandable table: Can make use of to expand each row and show other details of the table. 
 * We can make the User experience much better with better layout and visuals.
 * The details keeps changing in the card until all data is fetched, so it is bit slow and needs improvment.
+* Handle error messages properly.
 
 ## Not implemented 
 * I didnt focus on unit test cases right now but the ui kit components can be tested quite well as its quite simple. This is something we can focus later.
 
 ## Takeaway
-* To be honest, I enjoyed working on the code and spent a little over three to four hours because I always get excited by challenges. Within 4 hours I was able to build the basic workable form but I wanted to make the user experience a little better so I spent a little more time.
+* To be honest, I enjoyed working on the code and spent a little over three to four hours because I always get excited by challenges. Within 4 hours I was able to build some basic workable form but I spent a little more time to make the user experience better.
 * I could structure the project in my terms and properly work on it. 
 * I know I can make the UI much better with time but i didnt want to complicate the UI and just keep it simple and sleek. 
 * Kendo UI has some great documentation so it was quite a delight to work with it. Its possible to build good components with it.

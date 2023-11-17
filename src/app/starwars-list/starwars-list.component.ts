@@ -23,7 +23,7 @@ interface cardDetails {
   bodyText: string,
 }
 
-declare type Category = 'planets' | 'characters' | 'starships';
+type Category = 'planets' | 'characters' | 'starships' | 'none';
 type ButtonConfig = {display: string, value: Category}
 type ColumnConfig = { field: string, title: string }
 type CategoryConfig = { [x: string]: { columns: ColumnConfig[], url: string, sortKey: keyof Data, cardTitle: string } }
@@ -49,7 +49,7 @@ export class StarwarsListComponent implements OnInit {
 
   categoryConfig: CategoryConfig = {
     planets: {
-      cardTitle: 'Top 5 Planets',
+      cardTitle: 'Top 5 Largest Planets',
       url: 'https://swapi.dev/api/planets/',
       sortKey: 'diameter',
       columns: [
@@ -96,63 +96,73 @@ export class StarwarsListComponent implements OnInit {
   planetsData: any[] = [];
 
   categoryTitle: string = '';
+  currentCategory: Category = 'none';
 
   ngOnInit(): void {
   }
 
   onNavigate(buttonConfig: ButtonConfig): void {
     this.isLoading = true;
+    this.currentCategory = buttonConfig.value;
     let config = this.categoryConfig[buttonConfig.value];
     this.currentColumns = config.columns;
     this.clearGrid();
-    this.isLoading = true;
     this.fetchAllData(config.url, buttonConfig.value);
     this.categoryTitle = config.cardTitle;
   }
 
   fetchAllData(url: string, category: Category): void {
-    this.starwarService.fetchCategoryData(url).subscribe((res: any) => {
-      const mappedData = res.results.map((item: any) => {
-        return {
-          name: item.name,
-          gender: item.gender,
-          mass: item.mass,
-          diameter: item.diameter,
-          population: item.population,
-          climate: item.climate,
-          gravity: item.gravity,
-          birthYear: item.birth_year,
-          eyeColor: item.eye_color,
-          consumables: item.consumables,
-          crew: item.crew,
-          passengers: item.passengers,
-          starshipClass: item.starship_class,
-        };
+    if (this.currentCategory === category) {
+      this.starwarService.fetchCategoryData(url).subscribe((res: any) => {
+        const mappedData = res.results.map((item: any) => {
+          return {
+            name: item.name,
+            gender: item.gender,
+            mass: item.mass,
+            diameter: item.diameter,
+            population: item.population,
+            climate: item.climate,
+            gravity: item.gravity,
+            birthYear: item.birth_year,
+            eyeColor: item.eye_color,
+            consumables: item.consumables,
+            crew: item.crew,
+            passengers: item.passengers,
+            starshipClass: item.starship_class,
+          };
+        });
+        // We need to write this condtion here as well because when we change tab and the category is still loading data
+        // it will run some of these and disrupt the data
+        if (this.currentCategory === category) {
+          this.gridData = this.gridData.concat(mappedData); 
+          // We need to do this as sorting gridData changes the main array as well and chages the UI
+          let clonedData = JSON.parse(JSON.stringify(this.gridData))
+          this.sortByData(category, clonedData);
+
+          url = res.next;
+          if (url) {
+            this.fetchAllData(res.next, category);
+          } else {
+            this.isLoading = false; 
+          }
+        }   
       });
-      this.gridData = [...this.gridData, ...mappedData]; 
-      this.sortByData(category);
-
-      url = res.next;
-      if (url) {
-        this.fetchAllData(res.next, category);
-      } else {
-        this.isLoading = false; 
-      }
-    });
+    }
   }
- 
 
-  public sortByData(category: Category): void {
+  // Put this in service as we shouldnt do this in component.
+  public sortByData(category: Category, clonedData: any): void {
     let config = this.categoryConfig[category];
     let sortData: Data[] = []
     let prependText = '';
+
     if (category === 'planets') {
-      sortData = this.gridData.sort((a, b) => b.diameter - a.diameter).slice(0,5);
+      sortData = clonedData.sort((a: any, b: any) => b.diameter - a.diameter).slice(0,5);
     } else if (category === 'characters') {
       // Using 1977 as the battle of Yavin
       const battleOfYavin = 1977;
       const currentYear = new Date().getFullYear();
-      sortData = this.gridData.filter(data => {
+      sortData = clonedData.filter((data: any) => {
         // let age = 0;
         // const yavinAge = data.birthYear.slice(0, -3)
         // if (data.birthYear.includes('BBY')) {
@@ -170,23 +180,21 @@ export class StarwarsListComponent implements OnInit {
         const yavinAge = data.birthYear.slice(0, -3);
 
         if (data.birthYear.includes('BBY') && + yavinAge < 40) {
-          return true
+          return true;
         }
-
         return false;
-      }).sort((a, b) => b.mass - a.mass).slice(0,5);
+      }).sort((a: any, b: any) => b.mass - a.mass).slice(0,5);
     } else if (category === 'starships') {
-      sortData = this.gridData.sort((a, b) => parseInt(a.crew) - parseInt(b.crew)).slice(0,5);
+      sortData = clonedData.sort((a: any, b: any) => parseInt(a.crew) - parseInt(b.crew)).slice(0,5);
     } else {
       this.clearGrid();
     }
 
     this.cardDetails = sortData.map((item: any) => ({
       bodyTitle: item.name,
-      bodyText: `${category === 'characters' ? 'Age: ' + item.birthYear : ''} | Mass: ${item[config.sortKey]}`
+      bodyText: `${category === 'characters' ? 'Age: ' + item.birthYear : ''} ` + `${config.sortKey}: ${item[config.sortKey]}`
     }));
   }
-  
   private clearGrid(): void {
     this.gridData = [];
   }
